@@ -1,6 +1,6 @@
 Pyrogram
 TgCrypto
-youtube_dl
+yt_dlp
 youtube_search_python
 youtube_search
 requests
