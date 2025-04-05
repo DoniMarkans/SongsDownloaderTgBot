@@ -3,7 +3,7 @@ import time
 import ffmpeg
 import logging
 import requests
-import youtube_dl
+from yt_dlp import YoutubeDL  # Changed from youtube_dl
 from pyrogram import filters, Client, idle
 from youtube_search import YoutubeSearch
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -66,10 +66,8 @@ def a(client, message):
                 time.sleep(1)
             results = YoutubeSearch(query, max_results=1).to_dict()
             count += 1
-        # results = YoutubeSearch(query, max_results=1).to_dict()
         try:
             link = f"https://youtube.com{results[0]['url_suffix']}"
-            # print(results)
             title = results[0]["title"]
             thumbnail = results[0]["thumbnails"][0]
             duration = results[0]["duration"]
@@ -97,7 +95,7 @@ def a(client, message):
         return
     m.edit("`𝐔𝐩𝐥𝐨𝐚𝐝𝐢𝐧𝐠 𝐘𝐨𝐮𝐫 𝐒𝐨𝐧𝐠, 𝐏𝐥𝐞𝐚𝐬𝐞 𝐖𝐚𝐢𝐭...`")
     try:
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        with YoutubeDL(ydl_opts) as ydl:  # Changed from youtube_dl.YoutubeDL to YoutubeDL
             info_dict = ydl.extract_info(link, download=False)
             audio_file = ydl.prepare_filename(info_dict)
             ydl.process_info(info_dict)
