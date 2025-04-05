@@ -5,6 +5,8 @@ from yt_dlp import YoutubeDL
 from pyrogram import filters, Client, idle
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+# Путь к файлу cookies
+COOKIES_FILE = "cookies.txt"
 
 ## Commands --------
 @Client.on_message(filters.command(['start']))
@@ -59,7 +61,7 @@ async def download_audio(client, message):
     url = message.text.strip()
     m = await message.reply('🔎 𝐏𝐫𝐨𝐜𝐞𝐬𝐬𝐢𝐧𝐠 𝐲𝐨𝐮𝐫 𝐘𝐨𝐮𝐭𝐮𝐛𝐞 𝐥𝐢𝐧𝐤...')
 
-    # Настройки для yt_dlp: лучшее качество аудио
+    # Настройки для yt_dlp: лучшее качество аудио с cookies
     ydl_opts = {
         'format': 'bestaudio/best',  # Скачиваем лучшее доступное аудио
         'postprocessors': [{
@@ -68,6 +70,7 @@ async def download_audio(client, message):
             'preferredquality': '192',    # Качество 192 kbps (можно настроить)
         }],
         'outtmpl': 'audio_%(id)s.%(ext)s',  # Имя файла
+        'cookiefile': COOKIES_FILE if os.path.exists(COOKIES_FILE) else None,  # Используем cookies, если файл существует
     }
 
     try:
@@ -81,7 +84,7 @@ async def download_audio(client, message):
             audio_file = ydl.prepare_filename(info_dict).replace('.webm', '.mp3').replace('.m4a', '.mp3')  # Учитываем конвертацию
 
             # Скачиваем аудио
-            await m.edit("`𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐢𝐧𝐠 𝐚𝐮𝐝𝐢�{o...`")
+            await m.edit("`𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐢𝐧𝐠 𝐚𝐮𝐝𝐢𝐨...`")
             ydl.process_info(info_dict)
 
         # Скачиваем миниатюру, если есть
@@ -96,7 +99,7 @@ async def download_audio(client, message):
         rep = (
             f'🎧 𝗧𝗶𝘁𝘁𝗹𝗲 : [{title[:35]}]({url})\n'
             f'⏳ 𝐃𝐮𝐫𝐚𝐭𝐢𝐨𝐧 : `{time.strftime("%M:%S", time.gmtime(duration))}`\n'
-            f'👀 𝐕𝐢𝐞𝐰�{s} : `{views:,}`\n\n'
+            f'👀 𝐕𝐢𝐞𝐰𝐬 : `{views:,}`\n\n'
             f'📮 𝗕𝘆: {message.from_user.mention()}\n'
             f'📤 𝗕𝘆 : @AnnieElizaSongDT_Bot'
         )
